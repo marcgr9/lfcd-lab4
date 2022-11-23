@@ -1,5 +1,4 @@
 import java.io.File
-import java.lang.RuntimeException
 import java.util.Scanner
 
 data class Transition(
@@ -17,8 +16,8 @@ class FiniteAutomata(
     val alphabet: MutableList<Char> = mutableListOf(),
     val states: MutableList<Char> = mutableListOf(),
     val transitions: MutableList<Transition> = mutableListOf(),
-    var initialStates: Char = ' ',
-    var endStates: Char = ' ',
+    var initialState: Char = ' ',
+    var endStates: MutableList<Char> = mutableListOf(),
 ) {
 
     companion object {
@@ -37,10 +36,10 @@ class FiniteAutomata(
                         result.alphabet.addAll(splitLine)
                     }
                     2 -> {
-                        result.initialStates = splitLine[0]
+                        result.initialState = splitLine[0]
                     }
                     3 -> {
-                        result.endStates = splitLine[0]
+                        result.endStates.addAll(splitLine)
                     }
                     else -> {
                         result.transitions.add(
@@ -58,40 +57,55 @@ class FiniteAutomata(
 
     }
 
-    fun getNextState(currentState: Char, value: Char): Char
+    fun isAccepted(dfa: String): Boolean {
+        var currentState = initialState
+        dfa.forEach {
+            currentState = getNextState(currentState, it)
+        }
+        return endStates.contains(currentState)
+    }
+
+    private fun getNextState(currentState: Char, value: Char): Char
         = transitions.find {
             it.startState == currentState && it.value == value
         }?.endState ?: ' '
 
-    fun isAccepted(variable: String): Boolean {
-        var currentState = initialStates
-        variable.forEach {
-            currentState = getNextState(currentState, it)
-        }
-        return endStates == currentState
-    }
 }
 
 fun main(args: Array<String>) {
     val fa = FiniteAutomata.fromFile("src/main/resources/data.in")
 
+    println(getMenu())
     while (true) {
         with(Scanner(System.`in`)) {
             when (nextInt()) {
+                0 -> println(getMenu())
                 1 -> println(fa.states)
                 2 -> println(fa.alphabet)
                 3 -> println(fa.transitions)
-                4 -> println(fa.initialStates)
+                4 -> println(fa.initialState)
                 5 -> println(fa.endStates)
                 6 -> {
+                    print("DFA: ")
                     val str = next()
-                    if (fa.isAccepted(str)) {
-                        println("Accepted")
-                    } else {
-                        println("Not accepted")
-                    }
+                    println(
+                        "The DFA is " +
+                        if (fa.isAccepted(str)) "" else "not" +
+                        " accepted."
+                    )
                 }
             }
         }
     }
 }
+
+fun getMenu() =
+    """
+        0. Menu
+        1. Display set of states
+        2. Display the alphabet
+        3. Display all the transitions
+        4. Display the initial state
+        5. Display the final states
+        6. Verify if a DFA is accepted by the FA
+    """.trimIndent()
