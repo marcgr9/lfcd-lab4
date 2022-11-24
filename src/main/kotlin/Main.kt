@@ -29,18 +29,10 @@ class FiniteAutomata(
             File(file).forEachLine {
                 val splitLine = it.trim().split(" ").map { it.toCharArray()[0] }
                 when (lineNumber) {
-                    0 -> {
-                        result.states.addAll(splitLine)
-                    }
-                    1 -> {
-                        result.alphabet.addAll(splitLine)
-                    }
-                    2 -> {
-                        result.initialState = splitLine[0]
-                    }
-                    3 -> {
-                        result.endStates.addAll(splitLine)
-                    }
+                    0 -> result.states.addAll(splitLine)
+                    1 -> result.alphabet.addAll(splitLine)
+                    2 -> result.initialState = splitLine[0]
+                    3 -> result.endStates.addAll(splitLine)
                     else -> {
                         result.transitions.add(
                             Transition(
