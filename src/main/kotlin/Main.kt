@@ -81,9 +81,9 @@ fun main(args: Array<String>) {
                     print("DFA: ")
                     val str = next()
                     println(
-                        "The DFA is" +
-                        (if (fa.isAccepted(str)) "" else "not") +
-                        " accepted."
+                        "The DFA is " +
+                        (if (fa.isAccepted(str)) " " else "not ") +
+                        "accepted."
                     )
                 }
             }
