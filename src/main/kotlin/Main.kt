@@ -36,7 +36,7 @@ class FiniteAutomata(
                     else -> {
                         result.transitions.add(
                             Transition(
-                                splitLine[0], splitLine[1], splitLine[2]
+                                splitLine[0], splitLine[2], splitLine[1]
                             )
                         )
                     }
@@ -81,8 +81,8 @@ fun main(args: Array<String>) {
                     print("DFA: ")
                     val str = next()
                     println(
-                        "The DFA is " +
-                        if (fa.isAccepted(str)) "" else "not" +
+                        "The DFA is" +
+                        (if (fa.isAccepted(str)) "" else "not") +
                         " accepted."
                     )
                 }
